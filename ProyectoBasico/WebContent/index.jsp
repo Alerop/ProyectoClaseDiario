@@ -39,6 +39,8 @@
 	 */
 	 
 	 HashMap<String,ArrayList<Jugador>> clubs = request.;
+	 //esto no lo consigo entender
+	 
 	%>
 </body>
 </html>
