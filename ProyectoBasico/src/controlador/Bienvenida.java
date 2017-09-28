@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.Collection;
+
 import modelo.Jugador;
 
 /**
@@ -62,7 +65,7 @@ public class Bienvenida extends HttpServlet {//clase de herencia de HttpServlet
 		jugadores.add(new Jugador("Pique",3));
 		jugadores.add(new Jugador("SergiBusquets",16));
 		
-		clubs.put("Real Madrid",jugadores);//cargarlo en el hasmap
+		clubs.put("Barcelona FC",jugadores);//cargarlo en el hasmap
 		
 		//jugadores AtleticoMadrid
 		jugadores = new ArrayList<>();//se realiza con jugadroes ya q previamente se guardan en el HashMap
@@ -75,10 +78,23 @@ public class Bienvenida extends HttpServlet {//clase de herencia de HttpServlet
 		jugadores.add(new Jugador("Koke",6));
 		jugadores.add(new Jugador("Falcao",9));
 		
-		clubs.put("Real Madrid",jugadores);
+		clubs.put("Atlético Madrid",jugadores);
 		
 		//estableciendo atributo a doget 
 		request.setAttribute("equipos", clubs);
+		
+		if(request.getParameter("club") != null){//priemra vez?
+			
+			String equipoSeleccionado = request.getParameter("club");
+			ArrayList<Jugador> listaEquipos = clubs.get(equipoSeleccionado);
+			//estableciento atributo 
+			request.setAttribute("seleccionados", listaEquipos);
+		}
+		
+		
+		//como le cede el control el server al jsp
+		request.getRequestDispatcher("/JSP/equipos.jsp").forward(request,response);
+		
 		
 	}
 
@@ -88,6 +104,7 @@ public class Bienvenida extends HttpServlet {//clase de herencia de HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+		
 	}
 
 	@Override
@@ -95,5 +112,7 @@ public class Bienvenida extends HttpServlet {//clase de herencia de HttpServlet
 		System.out.println("Ejecutando método init");//para comprobar q se ejecuta
 		super.init();
 	}
+	
+	
 
 }
