@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-   	 <%@ page import="java.util.HashMap, java.util.ArrayList, java.util.Set, java.util.Collection, modelo.Jugador" %>
+	pageEncoding="ISO-8859-1"%>
+<%@ page
+	import="java.util.HashMap, java.util.ArrayList, java.util.Set, java.util.Collection, modelo.Jugador"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,9 +9,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
-	<% //response.sendRedirect("Hola?x=321&y=654"); %><!-- Decir que va a ejecutar codigo java -->
-	
+
+	<%
+		//response.sendRedirect("Hola?x=321&y=654");
+	%><!-- Decir que va a ejecutar codigo java -->
+
 	<div>CONSULTA DE JUGADORES</div>
 	<!-- <div>
 		<form name="Pepi" method="post" action="Hola">
@@ -30,59 +33,42 @@
 		</form>
 	</div>-->
 	<%
-		if(request.getParameter("boton")!=null){//primera vez ?
-				
-			ArrayList<Jugador> listaEquipos = (ArrayList<Jugador>) request.getAttribute("seleccionados");
-		
-		}
-		
-						//esto es lo mismo que (int) 25
-			HashMap<String,ArrayList<Jugador>> clubs = (HashMap<String, ArrayList<Jugador>>) request.getAttribute("equipos");
-						//casting porque devuelve un objeto
-
-
-	 	
+		//esto es lo mismo que (int) 25
+		HashMap<String, ArrayList<Jugador>> clubs = (HashMap<String, ArrayList<Jugador>>) request
+				.getAttribute("equipos");
+		//casting porque devuelve un objeto
 	%>
-	
+
 	<div>
 		<form method="post" action="">
 			<div>
 				<select name="club">
-					
-				<%
-					//obtener claves del hashmap, basicamente nombres de equipos
-					Set<String> claves = clubs.keySet();
-					for(String clave:claves)
-						out.println("<option value=" + clave + ">" + clave + "</option>");
-				%>
-				
-					
-				</select>
-        		<input type="submit" value="Enviar" name="boton"/>
+
+					<%
+						//obtener claves del hashmap, basicamente nombres de equipos
+						Set<String> claves = clubs.keySet();
+						for (String clave : claves)
+							out.println("<option value=" + clave + ">" + clave + "</option>");
+					%>
+
+
+				</select> <input type="submit" value="Enviar" name="boton" />
 			</div>
-			<div>
-				<% 	//imprimir los jugadores - pendiente de resolucion
-					if(request.getParameter("club") !=null){
-						if(clubs.get(request.getParameter("club")) != null){
-							ArrayList<Jugador> jug = clubs.get(request.getParameter("club"));
-							for(int i=0;i<jug.size();i++){
-								
-				%>
-				<%= jug.get(i).getNombre()
-					
-				%>
-				<% 
-							}
-						}
-					}
-				
-					
-					
-				%>
-			</div>
+			<div></div>
 		</form>
+		<%
+			if (request.getParameter("club") != null) {//primera vez ?
+				out.print("<ul>");
+				ArrayList<Jugador> listaJugadores = (ArrayList<Jugador>) request.getAttribute("seleccionados");
+
+				for (Jugador jugador : listaJugadores) {
+					out.print("<li>" + jugador.getNombre() + "</li>");
+				}
+				out.print("</ul>");
+			}
+		%>
 	</div>
-	
-	
+
+
 </body>
 </html>
