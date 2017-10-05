@@ -47,8 +47,13 @@
 					<%
 						//obtener claves del hashmap, basicamente nombres de equipos
 						Set<String> claves = clubs.keySet();
-						for (String clave : claves)
-							out.println("<option value=" + clave + ">" + clave + "</option>");
+						String equipoElegido = (String) request.getAttribute("equipoElegido");
+						for (String clave : claves) {
+							String checked = clave.equals(equipoElegido) ? "selected" : "";
+							out.println("<option ");
+							out.println(checked);
+							out.println("value=\"" + clave + "\">" + clave + "</option>");
+						}
 					%>
 
 

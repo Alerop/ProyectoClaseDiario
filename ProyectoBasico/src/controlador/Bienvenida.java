@@ -87,16 +87,13 @@ public class Bienvenida extends HttpServlet {// clase de herencia de HttpServlet
 		// estableciendo atributo a doget
 		request.setAttribute("equipos", clubs);
 
-	
-			if (request.getParameter("club")!=null) {// priemra
-																			// vez?
-
-				String equipoSeleccionado = request.getParameter("club");
-				ArrayList<Jugador> listaJugadores = clubs.get(equipoSeleccionado);
-				// estableciento atributo
-				request.setAttribute("seleccionados", listaJugadores);
-			}
-		
+		if (request.getParameter("club") != null) {// priemra vez?
+			request.setAttribute("equipoElegido", request.getParameter("club"));
+			String equipoSeleccionado = request.getParameter("club");
+			ArrayList<Jugador> listaJugadores = clubs.get(equipoSeleccionado);
+			// estableciento atributo
+			request.setAttribute("seleccionados", listaJugadores);
+		}
 
 		// como le cede el control el server al jsp
 		request.getRequestDispatcher("/JSP/equipos.jsp").forward(request, response);
