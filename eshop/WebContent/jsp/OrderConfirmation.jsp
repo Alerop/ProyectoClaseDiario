@@ -1,5 +1,6 @@
 <%@page language="java" contentType="text/html"%>
 <%@page import="java.util.Hashtable"%>
+<%@page import="java.util.HashMap" %>
 <%@page import="eshop.beans.CartItem"%>
 <jsp:useBean id="dataManager" scope="application"
   class="eshop.model.DataManager"/>
@@ -18,9 +19,11 @@
   <jsp:setProperty property="*" name="customer"/>
 <%
     @SuppressWarnings("unchecked")
-    Hashtable<String, CartItem> cart =
+	HashMap<String, CartItem> cart = (HashMap<String, CartItem>) session.getAttribute("shoppingCart");
+	long orderId = dataManager.insertOrder(customer, cart);
+    /*Hashtable<String, CartItem> cart1 =
         (Hashtable<String, CartItem>)session.getAttribute("shoppingCart");
-    long orderId = dataManager.insertOrder(customer, cart);
+    long orderId1 = dataManager.insertOrder(customer, cart1);*/
     if (orderId > 0L) {
       session.invalidate();
   %>

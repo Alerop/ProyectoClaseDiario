@@ -13,6 +13,7 @@ import eshop.beans.Book;
 import eshop.beans.CartItem;
 import eshop.model.DataManager;
 import java.util.Hashtable;
+import java.util.HashMap;
 
 public class ShopServlet extends javax.servlet.http.HttpServlet implements javax.servlet.Servlet {
 	private static final long serialVersionUID = 1L;
@@ -20,7 +21,18 @@ public class ShopServlet extends javax.servlet.http.HttpServlet implements javax
 	public ShopServlet() {
 		super();
 	}
-
+/*
+ * 
+ * Dentro del pom al convertir el proyecto en maven
+ <dependencies>
+ 	<dependency>
+ 		<groupId>mysql<groupId>
+ 		<artifactId>mysql-connector-java</artifacId>
+ 		<version>5.1.41</version>
+ 	</dependency>
+ </dependencies>
+ */
+	
 	public void init(ServletConfig config) throws ServletException {
 		System.out.println("*** initializing controller servlet.");
 		super.init(config);
@@ -44,10 +56,15 @@ public class ShopServlet extends javax.servlet.http.HttpServlet implements javax
 
 	protected void addItem(HttpServletRequest request, DataManager dm) {
 		HttpSession session = request.getSession(true);
-		Hashtable<String, CartItem> shoppingCart = (Hashtable<String, CartItem>) session.getAttribute("shoppingCart");
-		if (shoppingCart == null) {
-			shoppingCart = new Hashtable<String, CartItem>(10);
+		//Hashtable<String, CartItem> shoppingCart1 = (Hashtable<String, CartItem>) session.getAttribute("shoppingCart");
+		HashMap<String,CartItem> shoppingCart = (HashMap<String,CartItem>)session.getAttribute("shoppingCart");
+		/*if (shoppingCart1 == null) {
+			shoppingCart1 = new Hashtable<String, CartItem>(10);
+		}*/
+		if(shoppingCart == null){
+			shoppingCart = new HashMap<String,CartItem>(10);
 		}
+		
 		String action = request.getParameter("action");
 		if (action != null && action.equals("addItem")) {
 			try {
@@ -57,7 +74,7 @@ public class ShopServlet extends javax.servlet.http.HttpServlet implements javax
 					CartItem item = new CartItem(book, 1);
 					shoppingCart.remove(bookId);
 					shoppingCart.put(bookId, item);
-					session.setAttribute("carrito", shoppingCart);
+					session.setAttribute("shoppingCart", shoppingCart);
 				}
 			} catch (Exception e) {
 				System.out.println("Error adding the selected book to the shopping cart!");
@@ -68,9 +85,10 @@ public class ShopServlet extends javax.servlet.http.HttpServlet implements javax
 	protected void updateItem(HttpServletRequest request) {
 		
 		HttpSession session = request.getSession(true);
-		Hashtable<String, CartItem> shoppingCart = (Hashtable<String, CartItem>) session.getAttribute("shoppingCart");
+		//Hashtable<String, CartItem> shoppingCart1 = (Hashtable<String, CartItem>) session.getAttribute("shoppingCart");
+		HashMap<String,CartItem> shoppingCart = (HashMap<String,CartItem>)session.getAttribute("shoppingCart");
 		if (shoppingCart == null) {
-			shoppingCart = new Hashtable<String, CartItem>(10);
+			shoppingCart = new HashMap<String, CartItem>(10);
 		}
 		String action = request.getParameter("action");
 		if (action != null && action.equals("updateItem")) {
@@ -94,9 +112,11 @@ public class ShopServlet extends javax.servlet.http.HttpServlet implements javax
 
 	protected void deleteItem(HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
-		Hashtable<String, CartItem> shoppingCart = (Hashtable<String, CartItem>) session.getAttribute("shoppingCart");
+		//Hashtable<String, CartItem> shoppingCart1 = (Hashtable<String, CartItem>) session.getAttribute("shoppingCart");
+		HashMap<String,CartItem> shoppingCart = (HashMap<String,CartItem>)session.getAttribute("shoppingCart");
+
 		if (shoppingCart == null) {
-			shoppingCart = new Hashtable<String, CartItem>(10);
+			shoppingCart = new HashMap<String, CartItem>(10);
 		}
 		String action = request.getParameter("action");
 		try {

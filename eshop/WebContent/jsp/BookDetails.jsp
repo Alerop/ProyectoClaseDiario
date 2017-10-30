@@ -41,7 +41,7 @@
               <input type="hidden" name="bookId" value="<%=book.getId()%>"/>
               <input type="submit" value="Add to Cart"/>
             </form>
-           <!-- <a class="link1" href="<% /*%><%=base%>?action=addItem&bookId=<%=book.getId()%>"> Add To Cart</a> --><%*/ %> 
+           <!--  <a class="link1" href="<%--=base --%>?action=addItem&bookId=<%--=book.getId()--%>"> Add To Cart</a> -->
             </td>
           </tr>
         </table>

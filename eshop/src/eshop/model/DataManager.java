@@ -3,6 +3,7 @@ package eshop.model;
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -86,7 +87,7 @@ public class DataManager {
 
   //---------- Order operations ----------
   public long insertOrder(Customer customer,
-		    Hashtable<String, CartItem> shoppingCart) {
+		    HashMap<String, CartItem> shoppingCart) {
     long returnValue = 0L;
     long orderId = System.currentTimeMillis();
     Connection connection = getConnection();
@@ -98,6 +99,7 @@ public class DataManager {
         try {
           OrderPeer.insertOrder(stmt, orderId, customer);
           OrderDetailsPeer.insertOrderDetails(stmt, orderId, shoppingCart);
+          /*OrderDetailsPeer.insertOrderDetails1(stmt, orderId, shoppingCart);el hashtable*/
           try { stmt.close(); }
           finally { stmt = null; }
           connection.commit();

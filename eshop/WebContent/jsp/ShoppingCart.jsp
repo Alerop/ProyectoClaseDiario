@@ -1,27 +1,24 @@
 <%@page language="java" contentType="text/html"%>
-<%@page import="java.util.Enumeration"%>
-<%@page import="java.util.Hashtable"%>
 <%@page import="java.util.HashMap" %>
-<%@page import="java.util.Collection" %>
-<%@page import="java.util.Collections" %>
 <%@page import="eshop.beans.Book"%>
 <%@page import="eshop.beans.CartItem"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id="dataManager" scope="application"
   class="eshop.model.DataManager"/>
 <%
   String base = (String) application.getAttribute("base");
   @SuppressWarnings("unchecked")
   
- /* HashMap<String,CartItem> shoppingCart1 = (HashMap<String, CartItem>)session.getAttribute("shoppingCart");*/
- 	Hashtable<String, CartItem> shoppingCart =
-      (Hashtable<String, CartItem>)session.getAttribute("shoppingCart");
+ HashMap<String,CartItem> shoppingCart = (HashMap<String, CartItem>)session.getAttribute("shoppingCart");
+ 	/*Hashtable<String, CartItem> shoppingCart1 =
+      (Hashtable<String, CartItem>)session.getAttribute("shoppingCart");*/
   if (shoppingCart == null) {
-    //shoppingCart = new HashMap<String, CartItem>(10);
-    shoppingCart = new Hashtable<String,CartItem>(10);
+    shoppingCart = new HashMap<String, CartItem>(10);
+   // shoppingCart = new Hashtable<String,CartItem>(10);
   }
-  String action = request.getParameter("action");
+ // String action = request.getParameter("action");
   //additem esta mal definido en el servlet
-  if (action != null && action.equals("addItem")) {
+  /*if (action != null && action.equals("addItem")) {
     try {
       String bookId = request.getParameter("bookId");
       Book book = dataManager.getBookDetails(bookId);
@@ -35,7 +32,7 @@
     catch (Exception e) {
       out.println("Error adding the selected book to the shopping cart!");
       }
-    }
+    }*/
   /*if (action != null && action.equals("updateItem")) {
     try {
       String bookId = request.getParameter("bookId");
@@ -82,9 +79,17 @@
           <th>Subtotal</th>
           <th>Delete</th>
           </tr>
-<%
+          <%-- <c:forEach var="item"items="${sessionScope['shoppingCart']}"></c:forEach> --%>
+          <%-- <c:forEach var="item" items="${sessionScope.shoppingCart}"></c:forEach> --%>
+		  <%-- <c:forEach var="item" items="${carrito}"></c:forEach> --%> 
+          <c:set var="totalprice" scope="session" value="0"></c:set>
+          <c:forEach var="item" items="${shoppingCart}">
+          
+          
+<%--
 		/*Collections<CartItem> c = shoppingCart;
         Enumeration<CartItem> enumList1 = shoppingCart.colec;*/
+        
 		Enumeration<CartItem> enumList = shoppingCart.elements();
         double itemPrice = 0;
         double totalPrice = 0;
@@ -101,43 +106,55 @@
           totalPrice += itemPrice;
           totalPriceRed=Math.round(totalPrice * 100d)/100d;
           
-  %>
+  --%>
           <tr>
-            <td><%=item.getBook().getTitle()%></td>
-            <td><%=item.getBook().getAuthor()%></td>
-            <td><%=item.getBook().getPrice()%></td>
+            <td><c:out value="${item.value.getBook().getTitle()}"></c:out><%--=item.getBook().getTitle()--%></td>
+            <td><c:out value="${item.value.getBook().getAuthor()}"></c:out><%--=item.getBook().getAuthor()--%></td>
+            <td><c:out value="${item.value.getBook().getPrice()}"></c:out><%--=item.getBook().getPrice()--%></td>
             <td><form>
             
               <input type="hidden" name="action" value="updateItem"/>
               <input type="hidden" name="bookId"
-                value="<%=item.getBook().getId()%>"/>
+                value="<c:out value="${item.value.getBook().getId()}"></c:out><%--=item.getBook().getId()--%>"/>
               <input type="text" size="2" name="quantity" 
-                value="<%=item.getQuantity()%>"/>
+                value="<c:out value="${item.value.getQuantity()}"></c:out><%--=item.getQuantity()--%>"/>
               <input type="submit" value="Update"/>
               </form></td>
             <td>
-              <%=itemPrice%>
+            <c:set var="cantidad" value="${item.value.getQuantity()}"></c:set>
+            <c:set var="precio" value="${item.value.getBook().getPrice()}"></c:set>
+            <c:set var="subtotal" scope="session" value="${subtotal+(cantidad*precio) }"></c:set>
+            <c:out value="${precio}"/><!-- imprimir el precio por pantalla en este td que es el correcpondiente al subtotal -->
+            <c:set var="totalprice" scope="session" value="${totalprice + subtotal}"></c:set>
+              <%--=itemPrice--%>
                 </td>
             <td><form>
               <input type="hidden" name="action" value="deleteItem"/>
               <input type="hidden" name="bookId" 
-                value="<%=item.getBook().getId()%>"/>
+                value="<c:out value="${item.value.getBook().getId()}"></c:out><%--=item.getBook().getId()--%>"/>
               <!-- <input type="submit" value="Delete"/> -->
-              <a class="link1" href="<% out.write(var.concat(item.getBook().getId()));%>">Borráte</a>
+              <c:set var="linkesito" value="http://localhost:8080/eshop/shop?action=deleteItem&bookId="></c:set>
+              <c:set var="urlbook" value="${item.value.getBook().getId()}"/>
+              <c:set var="fin" value="${stat.first ? '' : linkesito}${urlbook }"/>
+              <!--  <a class="link1" href="<%-- out.write(var.concat(item.getBook().getId()));--%>">Borráte</a>-->
+              <a class="link1" href="<c:out value="${fin}"></c:out>" >BorráteJSTL</a>
               </form></td>
             </tr>
-<%
+            </c:forEach>
+            
+<%--
           }
-  %>
+  --%>
         <tr>
-          <td colspan="5" id="total">Total: $<%=totalPriceRed%></td>
+          <td colspan="5" id="total">Total: $${totalprice}</td>
           <td class="total">&nbsp;</td>
           </tr>
         <tr>
           <td colspan="6" class="center"><a class="link1"
             href="<%=base%>?action=checkOut">Check Out</a></td>
-          </tr>
+          </tr>  
         </table>
+        
       </div>
 <%
     }
